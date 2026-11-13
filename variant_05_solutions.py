@@ -4,14 +4,6 @@
 Група: EIP30
 """
 
-def f(x: float) -> float:
-    return x ** 4 - 13 * x ** 2 + 36 - 1 / x
-
-x_0 = 1
-e = 0.00006
-c = 0.05    #Додатковий параметр, який впливає на функцію phi(x)
-# Якщо c зробити менше по модулю, то корінь знайдеться ймовірніше, але буде більше ітерацій
-
 def solve_iteration(f: function, x_0: float, e: float, c: float):
     def phi(x: float) -> float:
         return x + c * f(x)
@@ -35,3 +27,15 @@ def save_results_to_file(results: tuple):
         file.write("Calculations:\n")
         for i in range(count):
             file.write(f"{iterations[i]}\n")
+
+def main():
+    def f(x: float) -> float:
+        return x ** 4 - 13 * x ** 2 + 36 - 1 / x
+    x_0 = 1
+    e = 0.00006
+    c = 0.05    #Додатковий параметр, який впливає на функцію phi(x)
+    # Якщо c зробити менше по модулю, то корінь знайдеться ймовірніше, але буде більше ітерацій
+    results = solve_iteration(f, x_0, e, c)
+    save_results_to_file(results)
+
+main()
