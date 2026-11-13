@@ -9,19 +9,29 @@ def f(x: float) -> float:
 
 x_0 = 1
 e = 0.00006
-c = 0.05
+c = 0.05    #Додатковий параметр, який впливає на функцію phi(x)
+# Якщо c зробити менше по модулю, то корінь знайдеться ймовірніше, але буде більше ітерацій
 
-def solve_iteration(func = f, zero_value = x_0, min_diff = e, coeff = c):
+def solve_iteration(f: function, x_0: float, e: float, c: float):
     def phi(x: float) -> float:
-        return x + coeff * func(x)
-    prev = zero_value
+        return x + c * f(x)
+    prev = x_0
     x = phi(prev)
+    iterations = []
     count = 0
-    while abs(x - prev) > min_diff:
+    while abs(x - prev) > e:
         prev = x
         x = phi(prev)
-        if abs(phi(x)-x) >= abs(x - prev):
-            return "Result cannot be calculated, try to change x_0 or c"
+        if abs(phi(x) - x) >= abs(x - prev):
+            return ("cannot be calculated, try to change x_0 or c", count, iterations)
         count += 1
-        print(f"Iteration {count}: x =", x)
-    return f"After {count} iterations we got x = {x}"
+        iterations.append(f"Iteration {count}: x = {x}")
+    return (x, count, iterations)
+
+def save_results_to_file(results: tuple):
+    (root, count, iterations) = results
+    with open("results_variant_05.txt", "w", encoding = "utf-8") as file:
+        file.write(f"Root: {root:.6f}\n") if type(root) == float else file.write(f"Root: {root}\n")
+        file.write("Calculations:\n")
+        for i in range(count):
+            file.write(f"{iterations[i]}\n")
