@@ -21,7 +21,7 @@ def solve_iteration(f: function, x_0: float, e: float, c: float, n: int):
             x = "cannot be calculated, try to change x_0 or c"
             break
         count += 1
-        iterations.append(f"Iteration {count}: x = {x}")
+        iterations.append(x)
     return (x, count, iterations)
 
 def save_results_to_file(results: tuple):
@@ -29,15 +29,21 @@ def save_results_to_file(results: tuple):
     with open("results_variant_05.txt", "w", encoding = "utf-8") as file:
         file.write(f"Root: {root:.6f}\n") if type(root) == float else file.write(f"Root: {root}\n")
         file.write("Calculations:\n")
+        length = len(str(count))
+        file.write((length + 26) * '_' + '_''\n')
+        file.write('| № ' + length * ' ' + '| ' 'x' + 19 * ' ' + '|''\n')
+        file.write('|' + (length + 3) * '_' + '|' + 21 * '_' + '|''\n')
         for i in range(count):
-            file.write(f"{iterations[i]}\n")
+            file.write(f'| {i + 1}' + (length - len(str(i + 1)) + 2) * ' ' + '| ' +
+                        f'{iterations[i]}' + (20 - len(str(iterations[i]))) * ' ' + '|''\n')
+            file.write('|' + (length + 3) * '_' + '|' + 21 * '_' + '|''\n')
 
 def main():
     def f(x: float) -> float:
         return x ** 4 - 13 * x ** 2 + 36 - 1 / x
     x_0 = 1
     e = 0.00006
-    c = 0.05    #Додатковий параметр, який впливає на функцію phi(x)
+    c = 0.05    # Додатковий параметр, який впливає на функцію phi(x)
     # Якщо c зробити менше по модулю, то корінь знайдеться ймовірніше, але буде більше ітерацій
     n = int(input("Enter n: ")) # Максимальна кількість ітерацій
     results = solve_iteration(f, x_0, e, c, n)
