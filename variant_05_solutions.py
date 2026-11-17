@@ -4,7 +4,7 @@
 Група: EIP30
 """
 
-def solve_iteration(f: function, x_0: float, e: float, c: float):
+def solve_iteration(f: function, x_0: float, e: float, c: float, n: int):
     def phi(x: float) -> float:
         return x + c * f(x)
     prev = x_0
@@ -12,10 +12,14 @@ def solve_iteration(f: function, x_0: float, e: float, c: float):
     iterations = []
     count = 0
     while abs(x - prev) > e:
+        if count >= n:
+            x = "required accuracy is not reached, quantity of iterations is too large"
+            break
         prev = x
         x = phi(prev)
         if abs(phi(x) - x) >= abs(x - prev):
-            return ("cannot be calculated, try to change x_0 or c", count, iterations)
+            x = "cannot be calculated, try to change x_0 or c"
+            break
         count += 1
         iterations.append(f"Iteration {count}: x = {x}")
     return (x, count, iterations)
@@ -35,7 +39,8 @@ def main():
     e = 0.00006
     c = 0.05    #Додатковий параметр, який впливає на функцію phi(x)
     # Якщо c зробити менше по модулю, то корінь знайдеться ймовірніше, але буде більше ітерацій
-    results = solve_iteration(f, x_0, e, c)
+    n = int(input("Enter n: ")) # Максимальна кількість ітерацій
+    results = solve_iteration(f, x_0, e, c, n)
     save_results_to_file(results)
 
 main()
